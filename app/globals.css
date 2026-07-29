@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Surfaces */
+  --bg: #0b1220;
+  --surface: #131b2e;
+  --surface-raised: #1b2740;
+  --border: #2a3752;
+
+  /* Text */
+  --text-primary: #e6edf7;
+  --text-secondary: #8b98b5;
+  --text-muted: #5b6889;
+
+  /* Accents */
+  --accent-amber: #f2a83d;
+  --accent-amber-hover: #ffb954;
+  --accent-cyan: #4fd1e5;
+
+  /* Status */
+  --status-ontime: #3ecf8e;
+  --status-delay: #f2a83d;
+  --status-early: #4fd1e5;
+  --status-alert: #e5484d;
+  --status-pending: #5b6889;
+
+  --radius-sm: 3px;
+  --radius-md: 5px;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Semua data numerik/waktu/kode wajib pakai token mono ini, bukan cuma estetika:
+   menyamai konvensi tampilan instrumen aviasi asli (tabular, sejajar). */
+.font-data {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.font-display {
+  font-family: var(--font-space-grotesk), var(--font-inter), sans-serif;
+}
+
+/* Visible keyboard focus di seluruh app — bukan opsional. */
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+@keyframes toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toast-enter {
+  animation: toast-slide-in 200ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
