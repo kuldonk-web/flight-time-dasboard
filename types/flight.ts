@@ -101,3 +101,70 @@ export interface FlightSheetRow {
 }
 
 export type FlightSheetRowInput = Omit<FlightSheetRow, 'id' | 'createdAt' | 'updatedAt'>;
+/**
+ * ============================================================
+ * TAMBAHAN — copy-paste ke BAGIAN BAWAH file types/flight.ts yang sudah ada.
+ * ============================================================
+ */
+
+/** Nilai kondisi fasilitas: V = normal/ok, - = tidak ada/rusak, '' = belum diisi. */
+export type FacilityValue = '' | 'V' | '-';
+
+export interface FacilityStatus {
+  pabx: FacilityValue;
+  amsc: FacilityValue;
+  telp: FacilityValue;
+  pc: FacilityValue;
+  printer: FacilityValue;
+  internet: FacilityValue;
+  jam: FacilityValue;
+  amhs: FacilityValue;
+}
+
+/** Rekap jumlah pergerakan penerbangan untuk satu shift. */
+export interface FlightDataRow {
+  fpl: number;
+  dep: number;
+  arr: number;
+  chg: number;
+  cnl: number;
+  domScheduled: number;
+  intScheduled: number;
+  domNonScheduled: number;
+  intNonScheduled: number;
+  rta: number;
+  rtb: number;
+  div: number;
+  post: number;
+  local: number;
+}
+
+export interface ShiftInfo {
+  officer: string;
+  startTime: string; // "HH:mm" UTC
+  endTime: string; // "HH:mm" UTC
+  signature: string; // data URL PNG dari canvas, "" kalau belum tanda tangan
+}
+
+/** Satu entry = satu hari (1 record per tanggal), mengikuti format 1 halaman ARO Logbook. */
+export interface AroLogEntry {
+  id: string;
+  date: string; // "2026-07-30"
+  dutyChangeTime: string; // "HH:mm" UTC, jam pergantian dinas
+  shiftPagi: ShiftInfo;
+  shiftSiang: ShiftInfo;
+  shiftMalam: ShiftInfo;
+  flightData: {
+    pagi: FlightDataRow;
+    siang: FlightDataRow;
+    malam: FlightDataRow;
+  };
+  facilities: {
+    pagi: FacilityStatus;
+    siang: FacilityStatus;
+    malam: FacilityStatus;
+  };
+  operationalNotes: string;
+  createdAt: string;
+  updatedAt: string;
+}

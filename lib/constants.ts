@@ -62,3 +62,27 @@ export const FLIGHT_SHEET_KIND_OPTIONS = [
   { value: 'ARRIVAL', label: 'Arrival' },
   { value: 'LOKAL', label: 'Lokal' },
 ] as const;
+/**
+ * ============================================================
+ * TAMBAHAN — copy-paste ke BAGIAN BAWAH file lib/constants.ts yang sudah ada.
+ * ============================================================
+ */
+
+/** Info stasiun untuk kop ARO Logbook — ganti sesuai cabang kamu kalau perlu dipakai di stasiun lain. */
+export const ARO_STATION_INFO = {
+  line1: 'AIRNAV INDONESIA',
+  line2: 'CABANG BANDA ACEH',
+  line3: 'SULTAN ISKANDAR MUDA INTERNATIONAL AIRPORT',
+  title: 'ATS REPORTING OFFICE (ARO) OPERATIONAL LOGBOOK CABANG BANDA ACEH',
+};
+
+export const FACILITY_ROWS: { key: 'pabx' | 'amsc' | 'telp' | 'pc' | 'printer' | 'internet' | 'jam' | 'amhs'; label: string }[] = [
+  { key: 'pabx', label: 'PABX' },
+  { key: 'amsc', label: 'AMSC' },
+  { key: 'telp', label: 'TELP' },
+  { key: 'pc', label: 'PC' },
+  { key: 'printer', label: 'PRINTER' },
+  { key: 'internet', label: 'INTERNET' },
+  { key: 'jam', label: 'JAM' },
+  { key: 'amhs', label: 'AMHS' },
+];

@@ -2,15 +2,18 @@
 
 import { useEffect, useState } from 'react';
 import { useFlightSheet } from '@/hooks/useFlightSheet';
-import { ALT_FL_OPTIONS, FLIGHT_SHEET_KIND_OPTIONS, SHEET_STATUS_OPTIONS } from '@/lib/constants';
+import { ALT_FL_OPTIONS, FLIGHT_SHEET_KIND_OPTIONS } from '@/lib/constants';
 import type { FlightSheetKind } from '@/types/flight';
 import { Button } from '@/components/ui/Button';
+import { Modal } from '@/components/ui/Modal';
+import { Time24Input } from '@/components/flight-log/Time24Input';
+import { FlightSheetRealizationChart } from '@/components/flight-log/FlightSheetRealizationChart';
 import { exportFlightSheetToXlsx } from '@/utils/exportFlightSheetXlsx';
 import { exportFlightSheetToPdf } from '@/utils/exportFlightSheetPdf';
 import { useToast } from '@/components/ui/Toast';
 
 const CELL_INPUT =
-  'h-9 w-full bg-transparent px-2 text-sm text-text-primary outline-none focus:bg-surface-raised disabled:cursor-not-allowed disabled:bg-bg disabled:text-text-muted';
+  'h-9 w-full bg-transparent px-1.5 text-xs text-text-primary outline-none focus:bg-surface-raised disabled:cursor-not-allowed disabled:bg-bg disabled:text-text-muted';
 
 /** Field jam mana yang relevan/aktif untuk tiap jenis baris. */
 const TIME_FIELDS_ENABLED: Record<FlightSheetKind, { eobt: boolean; atd: boolean; eta: boolean; ata: boolean }> = {
@@ -54,6 +57,7 @@ export function FlightSheetTable() {
   } = useFlightSheet();
 
   const { showToast } = useToast();
+  const [rowPendingDelete, setRowPendingDelete] = useState<string | null>(null);
 
   function handleExportXlsx() {
     if (logs.length === 0) {
@@ -73,8 +77,15 @@ export function FlightSheetTable() {
     showToast(`${logs.length} baris berhasil di-export ke PDF.`, 'success');
   }
 
+  function confirmDelete() {
+    if (!rowPendingDelete) return;
+    removeRow(rowPendingDelete);
+    setRowPendingDelete(null);
+    showToast('Baris berhasil dihapus.', 'success');
+  }
+
   return (
-    <section className="flex flex-col gap-3">
+    <section className="flex w-full flex-col gap-3 px-4 py-6">
       <div className="flex flex-wrap items-center gap-3 rounded-t-sm bg-surface-raised px-4 py-2.5">
         <h2 className="font-display text-sm font-semibold text-text-primary">Flight Log</h2>
         <UtcClock />
@@ -95,24 +106,42 @@ export function FlightSheetTable() {
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-sm border border-border">
-        <table className="w-full min-w-[1450px] border-collapse text-sm">
+      <FlightSheetRealizationChart allLogs={logs} dailyLogs={dailyLogs} />
+
+      <div className="w-full rounded-sm border border-border">
+        <table className="w-full table-fixed border-collapse text-xs">
+          <colgroup>
+            <col className="w-[3%]" />
+            <col className="w-[8%]" />
+            <col className="w-[9%]" />
+            <col className="w-[9%]" />
+            <col className="w-[6%]" />
+            <col className="w-[8%]" />
+            <col className="w-[7%]" />
+            <col className="w-[7%]" />
+            <col className="w-[6%]" />
+            <col className="w-[6%]" />
+            <col className="w-[6%]" />
+            <col className="w-[6%]" />
+            <col className="w-[15%]" />
+            <col className="w-[3%]" />
+          </colgroup>
           <thead>
-            <tr className="bg-surface-raised text-xs uppercase tracking-wide text-text-secondary">
-              <th className="w-10 border border-border px-2 py-2">No</th>
-              <th className="border border-border px-2 py-2">Jenis</th>
-              <th className="border border-border px-2 py-2">Callsign</th>
-              <th className="border border-border px-2 py-2">Registrasi</th>
-              <th className="border border-border px-2 py-2">ALT/FL</th>
-              <th className="border border-border px-2 py-2">Type</th>
-              <th className="border border-border px-2 py-2">Route</th>
-              <th className="border border-border px-2 py-2">Bandara</th>
-              <th className="border border-border px-2 py-2">EOBT (UTC)</th>
-              <th className="border border-border px-2 py-2">ATD (UTC)</th>
-              <th className="border border-border px-2 py-2">ETA (UTC)</th>
-              <th className="border border-border px-2 py-2">ATA (UTC)</th>
-              <th className="border border-border px-2 py-2">Ket.</th>
-              <th className="w-9 border border-border px-1 py-2" />
+            <tr className="bg-surface-raised text-[10px] uppercase tracking-wide text-text-secondary">
+              <th className="border border-border px-1 py-2">No</th>
+              <th className="border border-border px-1 py-2">Jenis</th>
+              <th className="border border-border px-1 py-2">Callsign</th>
+              <th className="border border-border px-1 py-2">Registrasi</th>
+              <th className="border border-border px-1 py-2">ALT/FL</th>
+              <th className="border border-border px-1 py-2">Type</th>
+              <th className="border border-border px-1 py-2">Route</th>
+              <th className="border border-border px-1 py-2">Bandara</th>
+              <th className="border border-border px-1 py-2">EOBT</th>
+              <th className="border border-border px-1 py-2">ATD</th>
+              <th className="border border-border px-1 py-2">ETA</th>
+              <th className="border border-border px-1 py-2">ATA</th>
+              <th className="border border-border px-1 py-2">Keterangan</th>
+              <th className="border border-border px-1 py-2" />
             </tr>
           </thead>
           <tbody>
@@ -120,7 +149,7 @@ export function FlightSheetTable() {
               const timeEnabled = TIME_FIELDS_ENABLED[row.kind];
               return (
                 <tr key={row.id} className="text-text-primary odd:bg-surface even:bg-surface/60">
-                  <td className="border border-border px-2 py-1 text-center font-data text-text-secondary">
+                  <td className="border border-border px-1 py-1 text-center font-data text-text-secondary">
                     {idx + 1}
                   </td>
                   <td className="border border-border p-0">
@@ -172,7 +201,7 @@ export function FlightSheetTable() {
                       list="sheet-aircraft-type-options"
                       value={row.aircraftType}
                       onChange={(e) => patchRow(row.id, { aircraftType: e.target.value.toUpperCase() })}
-                      placeholder="B738 / ketik baru"
+                      placeholder="B738 / baru"
                       className={`${CELL_INPUT} font-data uppercase`}
                     />
                   </td>
@@ -194,57 +223,49 @@ export function FlightSheetTable() {
                     />
                   </td>
                   <td className="border border-border p-0">
-                    <input
-                      type="time"
+                    <Time24Input
                       value={row.eobt}
                       disabled={!timeEnabled.eobt}
-                      onChange={(e) => patchRow(row.id, { eobt: e.target.value })}
-                      className={`${CELL_INPUT} font-data`}
+                      onChange={(v) => patchRow(row.id, { eobt: v })}
+                      className={`${CELL_INPUT} text-center font-data`}
                     />
                   </td>
                   <td className="border border-border p-0">
-                    <input
-                      type="time"
+                    <Time24Input
                       value={row.atd}
                       disabled={!timeEnabled.atd}
-                      onChange={(e) => patchRow(row.id, { atd: e.target.value })}
-                      className={`${CELL_INPUT} font-data`}
+                      onChange={(v) => patchRow(row.id, { atd: v })}
+                      className={`${CELL_INPUT} text-center font-data`}
                     />
                   </td>
                   <td className="border border-border p-0">
-                    <input
-                      type="time"
+                    <Time24Input
                       value={row.eta}
                       disabled={!timeEnabled.eta}
-                      onChange={(e) => patchRow(row.id, { eta: e.target.value })}
-                      className={`${CELL_INPUT} font-data`}
+                      onChange={(v) => patchRow(row.id, { eta: v })}
+                      className={`${CELL_INPUT} text-center font-data`}
                     />
                   </td>
                   <td className="border border-border p-0">
-                    <input
-                      type="time"
+                    <Time24Input
                       value={row.ata}
                       disabled={!timeEnabled.ata}
-                      onChange={(e) => patchRow(row.id, { ata: e.target.value })}
-                      className={`${CELL_INPUT} font-data`}
+                      onChange={(v) => patchRow(row.id, { ata: v })}
+                      className={`${CELL_INPUT} text-center font-data`}
                     />
                   </td>
                   <td className="border border-border p-0">
-                    <select
+                    <textarea
                       value={row.status}
-                      onChange={(e) => patchRow(row.id, { status: e.target.value as typeof row.status })}
-                      className={CELL_INPUT}
-                    >
-                      {SHEET_STATUS_OPTIONS.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
+                      onChange={(e) => patchRow(row.id, { status: e.target.value })}
+                      placeholder="Ketik keterangan…"
+                      rows={Math.max(1, row.status.split('\n').length)}
+                      className={`${CELL_INPUT} resize-none py-1.5 leading-tight`}
+                    />
                   </td>
                   <td className="border border-border px-1 py-1 text-center">
                     <button
-                      onClick={() => removeRow(row.id)}
+                      onClick={() => setRowPendingDelete(row.id)}
                       aria-label="Hapus baris"
                       className="text-xs text-status-alert hover:underline"
                     >
@@ -294,6 +315,22 @@ export function FlightSheetTable() {
           Export PDF (Rekap Semua)
         </Button>
       </div>
+
+      <Modal open={!!rowPendingDelete} onClose={() => setRowPendingDelete(null)} title="Hapus Baris?" size="sm">
+        <div className="flex flex-col gap-5">
+          <p className="text-sm text-text-secondary">
+            Yakin ingin menghapus baris ini? Tindakan ini tidak bisa dibatalkan.
+          </p>
+          <div className="flex justify-end gap-2">
+            <Button variant="secondary" onClick={() => setRowPendingDelete(null)}>
+              Batal
+            </Button>
+            <Button variant="danger" onClick={confirmDelete}>
+              Ya, Hapus
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </section>
   );
 }
