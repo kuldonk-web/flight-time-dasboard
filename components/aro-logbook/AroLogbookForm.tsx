@@ -4,6 +4,10 @@ import { useAroLogbook } from '@/hooks/useAroLogbook';
 import { ARO_STATION_INFO, FACILITY_ROWS } from '@/lib/constants';
 import { Time24Input } from '@/components/flight-log/Time24Input';
 import { SignaturePad } from '@/components/ui/SignaturePad';
+import { AroLogbookRealizationChart } from '@/components/aro-logbook/AroLogbookRealizationChart';
+import { exportAroLogEntryToPdf } from '@/utils/exportAroLogbookPdf';
+import { Button } from '@/components/ui/Button';
+import { useToast } from '@/components/ui/Toast';
 import type { FacilityValue, FlightDataRow, ShiftInfo } from '@/types/flight';
 
 const TIME_INPUT_CLASS =
@@ -35,8 +39,9 @@ function sumColumn(rows: FlightDataRow[], key: keyof FlightDataRow): number {
 }
 
 export function AroLogbookForm() {
-  const { entry, selectedDate, setSelectedDate, patchEntry, knownOfficers, isSyncing, isCloudEnabled } =
+  const { entries, entry, selectedDate, setSelectedDate, patchEntry, knownOfficers, isSyncing, isCloudEnabled } =
     useAroLogbook();
+  const { showToast } = useToast();
 
   function patchShift(shiftKey: 'shiftPagi' | 'shiftSiang' | 'shiftMalam', patch: Partial<ShiftInfo>) {
     patchEntry({ [shiftKey]: { ...entry[shiftKey], ...patch } });
@@ -58,6 +63,11 @@ export function AroLogbookForm() {
         [shiftKey]: { ...entry.facilities[shiftKey], [field]: value },
       },
     });
+  }
+
+  function handleExportPdf() {
+    exportAroLogEntryToPdf(entry);
+    showToast(`Halaman ARO Logbook tanggal ${selectedDate} berhasil di-export ke PDF.`, 'success');
   }
 
   const flightRows = SHIFT_KEYS.map((key) => entry.flightData[key]);
@@ -86,7 +96,13 @@ export function AroLogbookForm() {
             className="h-8 rounded-sm border border-border bg-surface px-2 font-data text-sm text-text-primary"
           />
         </div>
+        <Button variant="secondary" size="sm" onClick={handleExportPdf}>
+          Export PDF (Halaman Ini)
+        </Button>
       </div>
+
+      <AroLogbookRealizationChart allEntries={entries} entry={entry} />
+
       <h1 className="text-center font-display text-sm font-semibold uppercase tracking-wide text-text-primary">
         {ARO_STATION_INFO.title}
       </h1>

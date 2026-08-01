@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { Inter, Space_Grotesk, IBM_Plex_Mono } from 'next/font/google';
 import { ToastProvider } from '@/components/ui/Toast';
+import { TopNav } from '@/components/layout/TopNav';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -21,7 +22,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="id" className={`${inter.variable} ${spaceGrotesk.variable} ${plexMono.variable}`}>
       <body>
-        <ToastProvider>{children}</ToastProvider>
+        <ToastProvider>
+          <div className="flex min-h-screen flex-col">
+            <TopNav />
+            <div className="flex-1">{children}</div>
+          </div>
+        </ToastProvider>
       </body>
     </html>
   );

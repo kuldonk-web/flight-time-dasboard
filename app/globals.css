@@ -4,27 +4,27 @@
 
 :root {
   /* Surfaces */
-  --bg: #0b1220;
-  --surface: #131b2e;
-  --surface-raised: #1b2740;
-  --border: #2a3752;
+  --bg: #ffffff;
+  --surface: #f7f8fa;
+  --surface-raised: #eef1f5;
+  --border: #d8dee8;
 
   /* Text */
-  --text-primary: #e6edf7;
-  --text-secondary: #8b98b5;
-  --text-muted: #5b6889;
+  --text-primary: #101828;
+  --text-secondary: #475467;
+  --text-muted: #98a2b3;
 
   /* Accents */
-  --accent-amber: #f2a83d;
-  --accent-amber-hover: #ffb954;
-  --accent-cyan: #4fd1e5;
+  --accent-amber: #b7791f;
+  --accent-amber-hover: #d99a2b;
+  --accent-cyan: #0e7490;
 
   /* Status */
-  --status-ontime: #3ecf8e;
-  --status-delay: #f2a83d;
-  --status-early: #4fd1e5;
-  --status-alert: #e5484d;
-  --status-pending: #5b6889;
+  --status-ontime: #15803d;
+  --status-delay: #b7791f;
+  --status-early: #0e7490;
+  --status-alert: #dc2626;
+  --status-pending: #98a2b3;
 
   --radius-sm: 3px;
   --radius-md: 5px;

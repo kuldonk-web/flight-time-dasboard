@@ -121,7 +121,8 @@ export function useAroLogbook() {
     }
   }
 
-  return {
+ return {
+    entries, // seluruh data (semua tanggal) — dipakai untuk grafik tren realisasi
     entry,
     selectedDate,
     setSelectedDate,
