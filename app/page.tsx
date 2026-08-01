@@ -1,7 +1,13 @@
 'use client';
 
-import { AroLogbookForm } from '@/components/aro-logbook/AroLogbookForm';
+import { Header } from '@/components/layout/Header';
+import { FlightSheetTable } from '@/components/flight-log/FlightSheetTable';
 
-export default function AroLogbookPage() {
-  return <AroLogbookForm />;
+export default function DashboardPage() {
+  return (
+    <main className="flex w-full flex-col">
+      <Header />
+      <FlightSheetTable />
+    </main>
+  );
 }
