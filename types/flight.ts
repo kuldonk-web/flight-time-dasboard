@@ -168,3 +168,75 @@ export interface AroLogEntry {
   createdAt: string;
   updatedAt: string;
 }
+/** Satu baris pergerakan pesawat di Flightwatch Logbook. */
+export interface FlightwatchMovement {
+  id: string;
+  date: string; // "2026-07-30"
+  callsign: string;
+  registrasi: string;
+  aircraftType: string;
+  depAirport: string;
+  atd: string; // "HH:mm" UTC
+  destAirport: string;
+  ata: string; // "HH:mm" UTC
+  operator: string;
+  remarks: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type FlightwatchMovementInput = Omit<FlightwatchMovement, 'id' | 'createdAt' | 'updatedAt'>;
+
+/** Info Shift 1 / Shift 2 untuk satu tanggal (1 record per tanggal, seperti ARO Logbook). */
+export interface FlightwatchShiftMeta {
+  id: string;
+  date: string;
+  shift1: ShiftInfo;
+  shift2: ShiftInfo;
+  createdAt: string;
+  updatedAt: string;
+}
+/** Info shift khusus CTAF: cuma 1 jam (bukan rentang start-end) sesuai contoh gambar. */
+export interface CtafShiftInfo {
+  officer: string;
+  time: string; // "HH:mm" UTC
+  signature: string; // data URL PNG
+}
+
+/** Satu record per tanggal: info Shift 1/Shift 2 + jam transfer of duty. */
+export interface CtafShiftMeta {
+  id: string;
+  date: string;
+  shift1: CtafShiftInfo;
+  shift2: CtafShiftInfo;
+  transferOfDutyTime: string; // "HH:mm" UTC
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Satu baris log monitoring CTAF traffic. */
+export interface CtafLogEntry {
+  id: string;
+  date: string;
+  unattendedUnit: string; // ICAO 4 huruf, unit yang dimonitor
+  procedure: string; // misal "CTAF"
+  timeStart: string; // "HH:mm" UTC
+  timeEnd: string; // "HH:mm" UTC
+  operationalLog: string; // catatan bebas
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type CtafLogEntryInput = Omit<CtafLogEntry, 'id' | 'createdAt' | 'updatedAt'>;
+/** Satu NOTAM di database. */
+export interface NotamEntry {
+  id: string;
+  notamNumber: string; // misal "A3937/25"
+  description: string;
+  closingDate: string; // "2026-12-15"
+  documentLink: string; // URL dokumen lampiran, boleh kosong
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type NotamEntryInput = Omit<NotamEntry, 'id' | 'createdAt' | 'updatedAt'>;

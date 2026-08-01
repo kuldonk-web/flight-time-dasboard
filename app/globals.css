@@ -14,20 +14,20 @@
   --text-secondary: #475467;
   --text-muted: #98a2b3;
 
-  /* Accents */
+  /* Accents — biru, mengikuti referensi gaya dashboard modern */
   --accent-amber: #b7791f;
   --accent-amber-hover: #d99a2b;
-  --accent-cyan: #0e7490;
+  --accent-cyan: #2563eb;
 
   /* Status */
   --status-ontime: #15803d;
   --status-delay: #b7791f;
-  --status-early: #0e7490;
+  --status-early: #2563eb;
   --status-alert: #dc2626;
   --status-pending: #98a2b3;
 
-  --radius-sm: 3px;
-  --radius-md: 5px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
 }
 
 body {
@@ -45,6 +45,18 @@ body {
 
 .font-display {
   font-family: var(--font-space-grotesk), var(--font-inter), sans-serif;
+}
+
+/* Sudut lebih membulat di seluruh app — override utilitas Tailwind langsung
+   supaya tidak perlu mengubah className di tiap komponen satu-satu. */
+.rounded-sm {
+  border-radius: var(--radius-sm);
+}
+.rounded-t-sm {
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+.rounded-md {
+  border-radius: var(--radius-md);
 }
 
 /* Visible keyboard focus di seluruh app — bukan opsional. */

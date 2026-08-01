@@ -106,8 +106,6 @@ export function FlightSheetTable() {
         </div>
       </div>
 
-      <FlightSheetRealizationChart allLogs={logs} dailyLogs={dailyLogs} />
-
       <div className="w-full rounded-sm border border-border">
         <table className="w-full table-fixed border-collapse text-xs">
           <colgroup>
@@ -315,6 +313,9 @@ export function FlightSheetTable() {
           Export PDF (Rekap Semua)
         </Button>
       </div>
+
+      {/* Grafik realisasi — di PALING BAWAH halaman */}
+      <FlightSheetRealizationChart allLogs={logs} dailyLogs={dailyLogs} />
 
       <Modal open={!!rowPendingDelete} onClose={() => setRowPendingDelete(null)} title="Hapus Baris?" size="sm">
         <div className="flex flex-col gap-5">

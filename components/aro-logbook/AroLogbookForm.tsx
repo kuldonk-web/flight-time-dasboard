@@ -96,12 +96,7 @@ export function AroLogbookForm() {
             className="h-8 rounded-sm border border-border bg-surface px-2 font-data text-sm text-text-primary"
           />
         </div>
-        <Button variant="secondary" size="sm" onClick={handleExportPdf}>
-          Export PDF (Halaman Ini)
-        </Button>
       </div>
-
-      <AroLogbookRealizationChart allEntries={entries} entry={entry} />
 
       <h1 className="text-center font-display text-sm font-semibold uppercase tracking-wide text-text-primary">
         {ARO_STATION_INFO.title}
@@ -265,6 +260,16 @@ export function AroLogbookForm() {
           />
         </div>
       </div>
+
+      {/* Tombol aksi */}
+      <div className="flex flex-wrap items-center gap-2">
+        <Button variant="secondary" size="sm" onClick={handleExportPdf}>
+          Export PDF (Halaman Ini)
+        </Button>
+      </div>
+
+      {/* Grafik realisasi — di PALING BAWAH halaman */}
+      <AroLogbookRealizationChart allEntries={entries} entry={entry} />
     </div>
   );
 }

@@ -86,3 +86,5 @@ export const FACILITY_ROWS: { key: 'pabx' | 'amsc' | 'telp' | 'pc' | 'printer' |
   { key: 'jam', label: 'JAM' },
   { key: 'amhs', label: 'AMHS' },
 ];
+/** Saran awal untuk kolom Procedure di CTAF Traffic — tetap bisa diketik manual/bebas. */
+export const CTAF_PROCEDURE_SUGGESTIONS = ['CTAF', 'AFIS', 'MATZ'];
